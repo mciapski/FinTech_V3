@@ -8,13 +8,17 @@ public class TheMostPopularCompanies {
   SimpleStringProperty walor;
   SimpleStringProperty ticker;
   SimpleStringProperty rynek;
+  SimpleStringProperty cena;
+  SimpleStringProperty iloscAkcji;
 
 
-  public TheMostPopularCompanies(String ranking, String walor, String ticker, String rynek) {
+  public TheMostPopularCompanies(String ranking, String walor, String ticker, String rynek, String cena, String iloscAkcji) {
     this.ranking = new SimpleStringProperty(ranking);
     this.walor =new SimpleStringProperty(walor);
     this.ticker =new SimpleStringProperty(ticker);
     this.rynek =new SimpleStringProperty(rynek);
+    this.cena =new SimpleStringProperty(cena);
+    this.iloscAkcji =new SimpleStringProperty(iloscAkcji);
 
   }
 
@@ -64,5 +68,29 @@ public class TheMostPopularCompanies {
 
   public void setRynek(String rynek) {
     this.rynek.set(rynek);
+  }
+
+  public String getCena() {
+    return cena.get();
+  }
+
+  public SimpleStringProperty cenaProperty() {
+    return cena;
+  }
+
+  public void setCena(String cena) {
+    this.cena.set(cena);
+  }
+
+  public String getIloscAkcji() {
+    return iloscAkcji.get();
+  }
+
+  public SimpleStringProperty iloscAkcjiProperty() {
+    return iloscAkcji;
+  }
+
+  public void setIloscAkcji(String iloscAkcji) {
+    this.iloscAkcji.set(iloscAkcji);
   }
 }

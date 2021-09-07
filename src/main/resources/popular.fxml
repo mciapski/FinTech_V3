@@ -36,6 +36,8 @@
                 <TableColumn fx:id="walor" prefWidth="100.0" text="Walor" />
                 <TableColumn fx:id="ticker" prefWidth="100.0" text="Ticker" />
                 <TableColumn fx:id="rynek" prefWidth="100.0" text="Rynek notowan" />
+            <TableColumn fx:id="cena" prefWidth="100.0" text="Aktualna cena" />
+            <TableColumn fx:id="iloscAkcji" prefWidth="100.0" text="Ilość akcji" />
             </columns>
         </TableView>
     </center>

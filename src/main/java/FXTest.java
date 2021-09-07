@@ -1,5 +1,3 @@
-package Download;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
@@ -11,6 +9,7 @@ public class FXTest extends Application {
   @Override
   public void start(Stage stage) throws Exception {
     Parent root = FXMLLoader.load(getClass().getResource("/sample.fxml"));
+    Parent root1 = FXMLLoader.load(getClass().getResource("/popular.fxml"));
     Scene scene = new Scene(root);
     stage.setScene(scene);
     stage.show();

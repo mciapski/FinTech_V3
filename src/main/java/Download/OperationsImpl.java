@@ -65,8 +65,8 @@ public class OperationsImpl implements Operations {
   public void openConnection(String choiceTicker, String dateRange) {
     try {
       Connection connection = Jsoup.connect("https://stooq.pl/q/d/?s=" + choiceTicker + "&c=0&" + dateRange + "&o=1111111&o_s=1&o_d=1&o_p=1&o_n=1&o_o=1&o_m=1&o_x=1");
-      Document document1 = connection.get();
-      getLinkDownloadAndSave(document1);
+      Document document = connection.get();
+      getLinkDownloadAndSave(document);
     } catch (IOException | IllegalArgumentException e) {
       e.printStackTrace();
     }
@@ -156,13 +156,18 @@ public class OperationsImpl implements Operations {
       Elements walor = document.getElementsByClass("colWalor");
       Elements ticker = document.getElementsByClass("colTicker");
       Elements position = document.getElementsByClass("colPosition");
-
+      Elements fluent = document.getElementsByClass("rgb027154060");
+      Elements changeInPercenage = document.getElementsByClass("colZmianaProcentowa change down");
+      System.out.println(changeInPercenage.eachText());
       StringBuilder sb = new StringBuilder();
       for (int i = 0; i < walor.size(); i++) {
         sb.append(position.get(i).text()).append("  ")
             .append(walor.get(i).text()).append("  ").append(ticker.get(i).text()).append("\n");
       }
       System.out.println(sb);
+
+
+
 
     } catch (IOException e) {
       e.printStackTrace();

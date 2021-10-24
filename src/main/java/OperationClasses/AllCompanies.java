@@ -92,7 +92,7 @@ public class AllCompanies implements Initializable {
 
     for (int i = 0; i < walorsAsString.size(); i++) {
       companies.add(new Company(
-          positionAsString.get(i)
+          Integer.valueOf(positionAsString.get(i))
           , walorsAsString.get(i)
           , tickerAsString.get(i)
           , marketAsString.get(i)

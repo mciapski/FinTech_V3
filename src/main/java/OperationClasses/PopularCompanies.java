@@ -37,6 +37,7 @@ public class PopularCompanies implements Initializable {
     rynek.setCellValueFactory(new PropertyValueFactory<>("rynek"));
     cena.setCellValueFactory(new PropertyValueFactory<>("cena"));
     iloscAkcji.setCellValueFactory(new PropertyValueFactory<>("iloscAkcji"));
+    rsi.setCellValueFactory(new PropertyValueFactory<>("rsi"));
 
     //load dummy data
     //tableView.setItems(getValuesTheMostPopularCompanies());
@@ -47,7 +48,7 @@ public class PopularCompanies implements Initializable {
   @FXML
   public TableView<Company> tableView;
   @FXML
-  public TableColumn<Company, String> ranking;
+  public TableColumn<Company, Integer> ranking;
   @FXML
   public TableColumn<Company, String> walor;
   @FXML
@@ -104,12 +105,12 @@ public class PopularCompanies implements Initializable {
     if (sharesAmount.isEmpty()) {
       throw new IllegalArgumentException("List of sharesAmount is empty");
     }
-    List<Double> rsiValue = new ArrayList<>();
+    List<Double> rsiValue = getFilteredRSIList(getRSIandNamesfromWEB(),walorsAsString);
 
 
     for (int i = 0; i < walorsAsString.size(); i++) {
       popularCompanies.add(new Company(
-          positionAsString.get(i)
+          Integer.valueOf(positionAsString.get(i))
           , walorsAsString.get(i)
           , tickerAsString.get(i)
           , marketAsString.get(i)

@@ -1,12 +1,13 @@
 package EntityClasses;
 
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Company {
 
-  SimpleStringProperty ranking;
+  SimpleIntegerProperty ranking;
   SimpleStringProperty walor;
   SimpleStringProperty ticker;
   SimpleStringProperty rynek;
@@ -15,8 +16,8 @@ public class Company {
   SimpleDoubleProperty rsi;
 
 
-  public Company(String ranking, String walor, String ticker, String rynek, Double cena, Long iloscAkcji, Double rsi) {
-    this.ranking = new SimpleStringProperty(ranking);
+  public Company(Integer ranking, String walor, String ticker, String rynek, Double cena, Long iloscAkcji, Double rsi) {
+    this.ranking = new SimpleIntegerProperty(ranking);
     this.walor = new SimpleStringProperty(walor);
     this.ticker = new SimpleStringProperty(ticker);
     this.rynek = new SimpleStringProperty(rynek);
@@ -26,15 +27,15 @@ public class Company {
 
   }
 
-  public String getRanking() {
+  public Integer getRanking() {
     return ranking.get();
   }
 
-  public SimpleStringProperty rankingProperty() {
+  public SimpleIntegerProperty rankingProperty() {
     return ranking;
   }
 
-  public void setRanking(String ranking) {
+  public void setRanking(Integer ranking) {
     this.ranking.set(ranking);
   }
 

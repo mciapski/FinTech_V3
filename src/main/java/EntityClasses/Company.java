@@ -1,24 +1,28 @@
-package Download;
+package EntityClasses;
 
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class TheMostPopularCompanies {
+public class Company {
 
   SimpleStringProperty ranking;
   SimpleStringProperty walor;
   SimpleStringProperty ticker;
   SimpleStringProperty rynek;
-  SimpleStringProperty cena;
-  SimpleStringProperty iloscAkcji;
+  SimpleDoubleProperty cena;
+  SimpleLongProperty iloscAkcji;
+  SimpleDoubleProperty rsi;
 
 
-  public TheMostPopularCompanies(String ranking, String walor, String ticker, String rynek, String cena, String iloscAkcji) {
+  public Company(String ranking, String walor, String ticker, String rynek, Double cena, Long iloscAkcji, Double rsi) {
     this.ranking = new SimpleStringProperty(ranking);
-    this.walor =new SimpleStringProperty(walor);
-    this.ticker =new SimpleStringProperty(ticker);
-    this.rynek =new SimpleStringProperty(rynek);
-    this.cena =new SimpleStringProperty(cena);
-    this.iloscAkcji =new SimpleStringProperty(iloscAkcji);
+    this.walor = new SimpleStringProperty(walor);
+    this.ticker = new SimpleStringProperty(ticker);
+    this.rynek = new SimpleStringProperty(rynek);
+    this.cena = new SimpleDoubleProperty(cena);
+    this.iloscAkcji = new SimpleLongProperty(iloscAkcji);
+    this.rsi = new SimpleDoubleProperty(rsi);
 
   }
 
@@ -70,27 +74,39 @@ public class TheMostPopularCompanies {
     this.rynek.set(rynek);
   }
 
-  public String getCena() {
+  public Double getCena() {
     return cena.get();
   }
 
-  public SimpleStringProperty cenaProperty() {
+  public SimpleDoubleProperty cenaProperty() {
     return cena;
   }
 
-  public void setCena(String cena) {
+  public void setCena(double cena) {
     this.cena.set(cena);
   }
 
-  public String getIloscAkcji() {
+  public Long getIloscAkcji() {
     return iloscAkcji.get();
   }
 
-  public SimpleStringProperty iloscAkcjiProperty() {
+  public SimpleLongProperty iloscAkcjiProperty() {
     return iloscAkcji;
   }
 
-  public void setIloscAkcji(String iloscAkcji) {
+  public void setIloscAkcji(long iloscAkcji) {
     this.iloscAkcji.set(iloscAkcji);
+  }
+
+  public double getRsi() {
+    return rsi.get();
+  }
+
+  public SimpleDoubleProperty rsiProperty() {
+    return rsi;
+  }
+
+  public void setRsi(double rsi) {
+    this.rsi.set(rsi);
   }
 }

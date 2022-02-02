@@ -3,8 +3,11 @@ package OperationClasses;
 import EntityClasses.Company;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -15,6 +18,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.security.auth.callback.Callback;
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
@@ -38,12 +43,11 @@ public class PopularCompanies implements Initializable {
     cena.setCellValueFactory(new PropertyValueFactory<>("cena"));
     iloscAkcji.setCellValueFactory(new PropertyValueFactory<>("iloscAkcji"));
     rsi.setCellValueFactory(new PropertyValueFactory<>("rsi"));
-
-    //load dummy data
-    //tableView.setItems(getValuesTheMostPopularCompanies());
-
+    btn_chart.setCellValueFactory(new PropertyValueFactory<>("btn_chart"));
 
   }
+  //load dummy data
+  //tableView.setItems(getValuesTheMostPopularCompanies());
 
   @FXML
   public TableView<Company> tableView;
@@ -61,6 +65,8 @@ public class PopularCompanies implements Initializable {
   public TableColumn<Company, Long> iloscAkcji;
   @FXML
   public TableColumn<Company, Double> rsi;
+  @FXML
+  public TableColumn<Company, Button> btn_chart;
 
 
   public ObservableList<Company> getValuesTheMostPopularCompanies() throws IOException {
@@ -105,19 +111,34 @@ public class PopularCompanies implements Initializable {
     if (sharesAmount.isEmpty()) {
       throw new IllegalArgumentException("List of sharesAmount is empty");
     }
-    List<Double> rsiValue = getFilteredRSIList(getRSIandNamesfromWEB(),walorsAsString);
 
+    List<Double> rsiValueFromGPW = getFilteredRSIListGPW(getRSIandNamesGPW(), walorsAsString);
+    List<Double> rsiValueFromNewConnect = getFilteredRSIListGPW(getRSIandNamesNEWCONNECT(), walorsAsString);
+    int counterForNC = 0;
+    int counterForGPW = 0;
 
     for (int i = 0; i < walorsAsString.size(); i++) {
-      popularCompanies.add(new Company(
-          Integer.valueOf(positionAsString.get(i))
-          , walorsAsString.get(i)
-          , tickerAsString.get(i)
-          , marketAsString.get(i)
-          , prices.get(i)
-          , sharesAmount.get(i)
-          , rsiValue.get(i))
-      );
+      if (marketAsString.get(i).equalsIgnoreCase("NewConnect")) {
+        popularCompanies.add(new Company(
+            Integer.valueOf(positionAsString.get(i))
+            , walorsAsString.get(i)
+            , tickerAsString.get(i)
+            , marketAsString.get(i)
+            , prices.get(i)
+            , sharesAmount.get(i)
+            , rsiValueFromNewConnect.get(counterForNC)));
+        counterForNC++;
+      } else {
+        popularCompanies.add(new Company(
+            Integer.valueOf(positionAsString.get(i))
+            , walorsAsString.get(i)
+            , tickerAsString.get(i)
+            , marketAsString.get(i)
+            , prices.get(i)
+            , sharesAmount.get(i)
+            , rsiValueFromGPW.get(counterForGPW)));
+        counterForGPW++;
+      }
     }
     return popularCompanies;
 
@@ -160,9 +181,8 @@ public class PopularCompanies implements Initializable {
     return listOfSharesAmountTheMostPopular;
   }
 
-  public Map<List<String>, List<Double>> getRSIandNamesfromWEB() {
+  public Map<List<String>, List<Double>> getRSIandNamesGPW() {
     Map<List<String>, List<Double>> mapOfNamesAndValues = new HashMap<>();
-    List rsiList = new ArrayList();
     try {
       Connection connectionBiznesRadar = Jsoup.connect("https://www.biznesradar.pl/analiza-techniczna-profile/akcje_gpw");
       Document documentFromBiznesRadar = connectionBiznesRadar.get();
@@ -171,8 +191,12 @@ public class PopularCompanies implements Initializable {
       Elements rsiValues = documentFromBiznesRadar.select("td:nth-of-type(2)");
       List<String> rsiValuesAsString = rsiNames.eachText();
       List<String> filteredRSInames = new ArrayList<>();
-      List<Double> rsiValuesList = rsiValues.eachText().stream().map(Double::valueOf).collect(Collectors.toList());
-      List<Double> finalRsiValuesList = new ArrayList<>();
+      List<Double> rsiValuesList = rsiValues
+          .eachText()
+          .stream()
+          .map(x -> x.replace("bd.", "0"))
+          .map(Double::valueOf)
+          .collect(Collectors.toList());
 
 
       for (int i = 0; i < rsiValuesAsString.size(); i++) {
@@ -190,12 +214,48 @@ public class PopularCompanies implements Initializable {
     return mapOfNamesAndValues;
   }
 
-  public List<Double> getFilteredRSIList(Map<List<String>, List<Double>> mapOfNamesAndRSIValues, List<String> listOfWalors) {
+  public Map<List<String>, List<Double>> getRSIandNamesNEWCONNECT() {
+    Map<List<String>, List<Double>> mapOfNamesAndValues = new HashMap<>();
+    try {
+      Connection connectionBiznesRadar = Jsoup.connect("https://www.biznesradar.pl/analiza-techniczna-profile/newconnect");
+      Document documentFromBiznesRadar = connectionBiznesRadar.get();
+
+      Elements rsiNames = documentFromBiznesRadar.getElementsByClass("bvalue");
+      Elements rsiValues = documentFromBiznesRadar.select("td:nth-of-type(2)");
+      List<String> rsiValuesAsString = rsiNames.eachText();
+      List<String> filteredRSInames = new ArrayList<>();
+      List<Double> rsiValuesList = rsiValues.eachText()
+          .stream()
+          .map(x -> x.replace("bd.", "0"))
+          .map(Double::valueOf)
+          .collect(Collectors.toList());
+
+
+      for (int i = 0; i < rsiValuesAsString.size(); i++) {
+        if (rsiValuesAsString.get(i).length() >= 4) {
+          String filteredValue = rsiValuesAsString.get(i)
+              .substring(3)
+              .replace("(", "")
+              .replace(")", "")
+              .replace(" ", "");
+          filteredRSInames.add(filteredValue);
+        } else {
+          filteredRSInames.add(rsiValuesAsString.get(i));
+        }
+        mapOfNamesAndValues.put(filteredRSInames, rsiValuesList);
+      }
+    } catch (IOException io) {
+      io.printStackTrace();
+    }
+    return mapOfNamesAndValues;
+  }
+
+  public List<Double> getFilteredRSIListGPW(Map<List<String>, List<Double>> mapOfNamesAndRSIValues, List<String> listOfWalors) {
     List<Double> newRSIList = new ArrayList<>();
     for (Map.Entry<List<String>, List<Double>> entry : mapOfNamesAndRSIValues.entrySet()) {
       for (int i = 0; i < listOfWalors.size(); i++) {
         for (int j = 0; j < entry.getKey().size(); j++) {
-          if (listOfWalors.get(i).equalsIgnoreCase(entry.getKey().get(j))) {
+          if (listOfWalors.get(i).equalsIgnoreCase(entry.getKey().get(j)) && !newRSIList.contains(entry.getValue().get(j))) {
             newRSIList.add(entry.getValue().get(j));
           }
         }
@@ -203,6 +263,5 @@ public class PopularCompanies implements Initializable {
     }
     return newRSIList;
   }
-
 
 }
